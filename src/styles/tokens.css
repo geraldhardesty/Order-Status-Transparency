@@ -1,15 +1,21 @@
 /*
-  Brand tokens approximate Yokogawa's public corporate identity (signature red,
-  near-black header, restrained neutral grays, minimal ornamentation, dense
-  information-first layout). Live access to yokogawa.com was unavailable when
-  this was authored — replace the --brand-* values below with exact hex codes
-  from the internal brand guideline if they differ.
+  Brand tokens per Yokogawa's official corporate identity guideline:
+  Yokogawa Yellow (symbol color, #FFEE00), Yokogawa Blue (supporting color,
+  #004F9B), Yokogawa Green (supporting color, #00A04C), and Earth Gray
+  (#95A0A4). Update the --brand-* values below if the internal guideline
+  is revised.
 */
 :root {
-  --brand-red: #da291c;
-  --brand-red-dark: #a81e14;
-  --brand-red-tint: #fdecea;
+  --brand-yellow: #ffee00;
+  --brand-blue: #004f9b;
+  --brand-indigo: #00316c;
+  --brand-green: #00a04c;
+  --brand-gray: #95a0a4;
   --brand-ink: #131417;
+
+  --danger-red: #c0392b;
+  --danger-red-dark: #9c2e21;
+  --danger-red-tint: #fbeae7;
 
   --ink-900: #17181a;
   --ink-700: #3d4046;
@@ -22,25 +28,25 @@
   --surface-alt: #f5f6f7;
   --surface-sunken: #eceef0;
 
-  --focus-ring: #0b5fa5;
+  --focus-ring: var(--brand-blue);
 
   --status-open-bg: #eceef0;
   --status-open-fg: #4b4f56;
   --status-production-bg: #e6f0fa;
-  --status-production-fg: #0b5fa5;
-  --status-ready-bg: #e5f5ec;
-  --status-ready-fg: #16794a;
-  --status-shipped-bg: #eaf3e8;
-  --status-shipped-fg: #2f7a3d;
+  --status-production-fg: var(--brand-blue);
+  --status-ready-bg: #e3f7ea;
+  --status-ready-fg: var(--brand-green);
+  --status-shipped-bg: #e3f7ea;
+  --status-shipped-fg: var(--brand-green);
   --status-delayed-bg: #fdecd6;
   --status-delayed-fg: #a15a06;
   --status-cancelled-bg: #edeeef;
   --status-cancelled-fg: #85888e;
 
-  --credit-hold-bg: #fdeceb;
-  --credit-hold-fg: #b81f14;
-  --excel-tag-bg: #e5f5ec;
-  --excel-tag-fg: #16794a;
+  --credit-hold-bg: var(--danger-red-tint);
+  --credit-hold-fg: var(--danger-red);
+  --excel-tag-bg: #e3f7ea;
+  --excel-tag-fg: var(--brand-green);
   --sap-tag-bg: #eceef0;
   --sap-tag-fg: #4b4f56;
 

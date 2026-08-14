@@ -98,7 +98,7 @@ export function OrderRow({ order, expanded, onToggleExpand, onExpedite, onAddNot
               href={getTrackingUrl(order.shippingNumber, order.shippingCarrier)}
               target="_blank"
               rel="noopener noreferrer"
-              style={{ color: 'var(--brand-red)', textDecoration: 'none', fontWeight: 500 }}
+              style={{ color: 'var(--brand-blue)', textDecoration: 'none', fontWeight: 500 }}
             >
               {order.shippingNumber}
             </a>

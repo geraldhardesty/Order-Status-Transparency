@@ -59,12 +59,12 @@ a {
 }
 
 .brand-stripe {
-  height: 4px;
-  background: var(--brand-red);
+  height: 3px;
+  background: var(--brand-yellow);
 }
 
 .app-header {
-  background: var(--brand-ink);
+  background: var(--brand-blue);
   color: #fff;
 }
 
@@ -77,18 +77,25 @@ a {
   gap: 10px;
 }
 
-.app-header__mark {
-  font-size: 15px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+.app-header__logo {
   display: flex;
-  align-items: baseline;
-  gap: 2px;
+  align-items: center;
+  gap: 8px;
 }
 
-.app-header__mark span {
-  color: var(--brand-red);
+.app-header__wordmark {
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: #fff;
+}
+
+.app-header__diamond {
+  width: 10px;
+  height: 10px;
+  background: var(--brand-yellow);
+  transform: rotate(45deg);
+  flex-shrink: 0;
 }
 
 .app-header__divider {
@@ -189,14 +196,14 @@ a {
 }
 
 .btn-primary {
-  background: var(--brand-red);
-  border-color: var(--brand-red);
+  background: var(--brand-blue);
+  border-color: var(--brand-blue);
   color: #fff;
 }
 
 .btn-primary:hover:not(:disabled) {
-  background: var(--brand-red-dark);
-  border-color: var(--brand-red-dark);
+  background: var(--brand-indigo);
+  border-color: var(--brand-indigo);
 }
 
 .btn-quiet {
@@ -233,11 +240,15 @@ a {
 }
 
 .kpi-tile--accent-red {
-  border-top-color: var(--brand-red);
+  border-top-color: var(--danger-red);
 }
 
 .kpi-tile--accent-amber {
   border-top-color: #c97a12;
+}
+
+.kpi-tile--accent-yellow {
+  border-top-color: var(--brand-yellow);
 }
 
 .kpi-tile--accent-blue {
@@ -245,7 +256,7 @@ a {
 }
 
 .kpi-tile--accent-green {
-  border-top-color: #16794a;
+  border-top-color: var(--brand-green);
 }
 
 .kpi-tile__label {
@@ -338,8 +349,8 @@ a {
 }
 
 .chip[aria-pressed='true'] {
-  background: var(--ink-900);
-  border-color: var(--ink-900);
+  background: var(--brand-blue);
+  border-color: var(--brand-blue);
   color: #fff;
 }
 
@@ -441,7 +452,7 @@ a {
 
 .orders-table tbody tr.row--credit-hold {
   background: var(--credit-hold-bg);
-  box-shadow: inset 3px 0 0 var(--brand-red);
+  box-shadow: inset 3px 0 0 var(--danger-red);
 }
 
 .orders-table tbody tr.row--credit-hold:hover {

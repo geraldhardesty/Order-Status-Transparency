@@ -42,7 +42,7 @@ export function KpiBar({ orders }: { orders: Order[] }) {
         <div className="kpi-tile__value">{stats.atRiskCount}</div>
         <p className="kpi-tile__meta">Planned date has slipped vs. promise</p>
       </div>
-      <div className="kpi-tile kpi-tile--accent-red">
+      <div className="kpi-tile kpi-tile--accent-yellow">
         <p className="kpi-tile__label">Expedited</p>
         <div className="kpi-tile__value">{stats.expeditedCount}</div>
         <p className="kpi-tile__meta">Active expedite requests</p>
