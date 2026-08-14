@@ -94,14 +94,17 @@ export function OrderRow({ order, expanded, onToggleExpand, onExpedite, onAddNot
         </td>
         <td>
           {order.shippingNumber && order.shippingCarrier ? (
-            <a
-              href={getTrackingUrl(order.shippingNumber, order.shippingCarrier)}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{ color: 'var(--brand-blue)', textDecoration: 'none', fontWeight: 500 }}
-            >
-              {order.shippingNumber}
-            </a>
+            <div className="shipping-cell">
+              <a
+                href={getTrackingUrl(order.shippingNumber, order.shippingCarrier)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="shipping-cell__link"
+              >
+                {order.shippingNumber}
+              </a>
+              <span className="shipping-cell__carrier">{order.shippingCarrier}</span>
+            </div>
           ) : (
             '—'
           )}
@@ -243,11 +246,13 @@ export function OrderRow({ order, expanded, onToggleExpand, onExpedite, onAddNot
   );
 }
 
-function getTrackingUrl(shippingNumber: string, carrier: 'FedEx' | 'UPS'): string {
+function getTrackingUrl(shippingNumber: string, carrier: 'FedEx' | 'UPS' | 'DHL'): string {
   if (carrier === 'FedEx') {
     return `https://tracking.fedex.com/en/tracking/${shippingNumber}`;
-  } else {
+  } else if (carrier === 'UPS') {
     return `https://www.ups.com/track?tracknum=${shippingNumber}`;
+  } else {
+    return `https://www.dhl.com/us-en/home/tracking.html?tracking-id=${shippingNumber}`;
   }
 }
 

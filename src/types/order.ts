@@ -38,7 +38,7 @@ export interface Order {
   source: OrderSource;
   expedited: boolean;
   shippingNumber?: string;
-  shippingCarrier?: 'FedEx' | 'UPS';
+  shippingCarrier?: 'FedEx' | 'UPS' | 'DHL';
   cpqQuoteNumber?: string;
   actionHistory: ActionLogEntry[];
 }
