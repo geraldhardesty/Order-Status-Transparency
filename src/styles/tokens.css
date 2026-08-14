@@ -1,0 +1,51 @@
+/*
+  Brand tokens approximate Yokogawa's public corporate identity (signature red,
+  near-black header, restrained neutral grays, minimal ornamentation, dense
+  information-first layout). Live access to yokogawa.com was unavailable when
+  this was authored — replace the --brand-* values below with exact hex codes
+  from the internal brand guideline if they differ.
+*/
+:root {
+  --brand-red: #da291c;
+  --brand-red-dark: #a81e14;
+  --brand-red-tint: #fdecea;
+  --brand-ink: #131417;
+
+  --ink-900: #17181a;
+  --ink-700: #3d4046;
+  --ink-500: #6b6f76;
+  --ink-300: #9ca0a7;
+
+  --line: #dde0e4;
+  --line-strong: #c3c7cd;
+  --surface: #ffffff;
+  --surface-alt: #f5f6f7;
+  --surface-sunken: #eceef0;
+
+  --focus-ring: #0b5fa5;
+
+  --status-open-bg: #eceef0;
+  --status-open-fg: #4b4f56;
+  --status-production-bg: #e6f0fa;
+  --status-production-fg: #0b5fa5;
+  --status-ready-bg: #e5f5ec;
+  --status-ready-fg: #16794a;
+  --status-shipped-bg: #eaf3e8;
+  --status-shipped-fg: #2f7a3d;
+  --status-delayed-bg: #fdecd6;
+  --status-delayed-fg: #a15a06;
+  --status-cancelled-bg: #edeeef;
+  --status-cancelled-fg: #85888e;
+
+  --credit-hold-bg: #fdeceb;
+  --credit-hold-fg: #b81f14;
+  --excel-tag-bg: #e5f5ec;
+  --excel-tag-fg: #16794a;
+  --sap-tag-bg: #eceef0;
+  --sap-tag-fg: #4b4f56;
+
+  --radius-sm: 2px;
+  --radius-md: 3px;
+  --font-sans: 'Segoe UI', 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
+  --shadow-flat: 0 1px 2px rgba(19, 20, 23, 0.08);
+}
