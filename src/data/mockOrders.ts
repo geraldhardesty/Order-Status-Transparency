@@ -48,6 +48,8 @@ export const mockOrders: Order[] = [
     creditHold: false,
     source: 'SAP',
     expedited: true,
+    shippingNumber: '1Z999AA10123456784',
+    shippingCarrier: 'UPS',
     actionHistory: [
       {
         id: 'a1',
@@ -87,6 +89,8 @@ export const mockOrders: Order[] = [
     creditHold: false,
     source: 'SAP',
     expedited: false,
+    shippingNumber: '7942857392',
+    shippingCarrier: 'FedEx',
     actionHistory: [],
   },
   {
@@ -171,6 +175,8 @@ export const mockOrders: Order[] = [
     creditHold: false,
     source: 'SAP',
     expedited: false,
+    shippingNumber: '9400111899223456789012',
+    shippingCarrier: 'UPS',
     actionHistory: [],
   },
   {

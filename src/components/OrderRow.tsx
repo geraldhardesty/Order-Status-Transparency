@@ -62,6 +62,20 @@ export function OrderRow({ order, expanded, onToggleExpand, onExpedite, onReleas
           </div>
         </td>
         <td>
+          {order.shippingNumber && order.shippingCarrier ? (
+            <a
+              href={getTrackingUrl(order.shippingNumber, order.shippingCarrier)}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: 'var(--brand-red)', textDecoration: 'none', fontWeight: 500 }}
+            >
+              {order.shippingNumber}
+            </a>
+          ) : (
+            '—'
+          )}
+        </td>
+        <td>
           <CreditHoldBadge onHold={order.creditHold} />
         </td>
         <td>
@@ -102,6 +116,7 @@ export function OrderRow({ order, expanded, onToggleExpand, onExpedite, onReleas
                 <Fact label="Original Promised Ship" value={formatDate(order.originalPromisedShipDate)} />
                 <Fact label="Planned Ship" value={formatDate(order.plannedShippingDate)} />
                 <Fact label="Schedule Variance" value={variance === 0 ? 'On plan' : `${variance > 0 ? '+' : ''}${variance} days`} />
+                <Fact label="Shipping Number" value={order.shippingNumber ? `${order.shippingNumber} (${order.shippingCarrier})` : '—'} />
                 <Fact label="Credit Hold" value={order.creditHold ? 'Yes' : 'No'} />
               </div>
               <div className="detail-panel__history">
@@ -143,6 +158,14 @@ export function OrderRow({ order, expanded, onToggleExpand, onExpedite, onReleas
       )}
     </>
   );
+}
+
+function getTrackingUrl(shippingNumber: string, carrier: 'FedEx' | 'UPS'): string {
+  if (carrier === 'FedEx') {
+    return `https://tracking.fedex.com/en/tracking/${shippingNumber}`;
+  } else {
+    return `https://www.ups.com/track?tracknum=${shippingNumber}`;
+  }
 }
 
 function Fact({ label, value }: { label: string; value: string }) {

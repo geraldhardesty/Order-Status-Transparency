@@ -36,6 +36,8 @@ export interface Order {
   creditHold: boolean;
   source: OrderSource;
   expedited: boolean;
+  shippingNumber?: string;
+  shippingCarrier?: 'FedEx' | 'UPS';
   actionHistory: ActionLogEntry[];
 }
 
