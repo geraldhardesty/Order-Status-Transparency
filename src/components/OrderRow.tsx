@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import type { Order } from '../types/order';
 import { formatDate, scheduleVarianceDays } from '../utils/dates';
 import { CreditHoldBadge, SourceTag, StatusBadge } from './Badges';
@@ -13,18 +13,33 @@ interface Props {
   expanded: boolean;
   onToggleExpand: () => void;
   onExpedite: (reason: string, note: string) => void;
-  onReleaseHold: () => void;
   onAddNote: (note: string) => void;
   onAskQuestion: (question: string) => void;
 }
 
-export function OrderRow({ order, expanded, onToggleExpand, onExpedite, onReleaseHold, onAddNote, onAskQuestion }: Props) {
+export function OrderRow({ order, expanded, onToggleExpand, onExpedite, onAddNote, onAskQuestion }: Props) {
   const [noteDraft, setNoteDraft] = useState('');
   const [openModal, setOpenModal] = useState<'expedite' | 'question' | null>(null);
   const [showActionMenu, setShowActionMenu] = useState(false);
+  const [menuPos, setMenuPos] = useState({ top: 0, left: 0 });
+  const actionButtonRef = useRef<HTMLButtonElement>(null);
   const variance = scheduleVarianceDays(order.originalPromisedShipDate, order.plannedShippingDate);
   const isTerminal = TERMINAL_STATUSES.has(order.status);
   const isAtRisk = !isTerminal && variance > 0;
+
+  useEffect(() => {
+    if (showActionMenu && actionButtonRef.current) {
+      const rect = actionButtonRef.current.getBoundingClientRect();
+      setMenuPos({
+        top: rect.bottom + window.scrollY + 4,
+        left: rect.left + window.scrollX,
+      });
+
+      const handleClickOutside = () => setShowActionMenu(false);
+      document.addEventListener('click', handleClickOutside);
+      return () => document.removeEventListener('click', handleClickOutside);
+    }
+  }, [showActionMenu]);
 
   const rowClassNames = [
     order.creditHold && !isTerminal ? 'row--credit-hold' : '',
@@ -89,13 +104,9 @@ export function OrderRow({ order, expanded, onToggleExpand, onExpedite, onReleas
         </td>
         <td>
           <div className="cell-actions" style={{ position: 'relative' }}>
-            {order.creditHold && (
-              <button type="button" className="btn btn-sm" onClick={onReleaseHold}>
-                Release
-              </button>
-            )}
             <div style={{ position: 'relative', display: 'inline-block' }}>
               <button
+                ref={actionButtonRef}
                 type="button"
                 className="btn btn-sm btn-primary"
                 onClick={() => setShowActionMenu(!showActionMenu)}
@@ -107,15 +118,16 @@ export function OrderRow({ order, expanded, onToggleExpand, onExpedite, onReleas
                 <div
                   style={{
                     position: 'fixed',
+                    top: menuPos.top,
+                    left: menuPos.left,
                     backgroundColor: 'white',
-                    border: '1px solid var(--border-color)',
+                    border: '1px solid #ddd',
                     borderRadius: 4,
                     boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
-                    zIndex: 10000,
+                    zIndex: 99999,
                     minWidth: 180,
                   }}
                   onClick={(e) => e.stopPropagation()}
-                  onMouseLeave={() => setShowActionMenu(false)}
                 >
                   <button
                     type="button"

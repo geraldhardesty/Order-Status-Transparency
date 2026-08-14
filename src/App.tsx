@@ -98,7 +98,6 @@ function App() {
             expediteOrder(order.salesOrderNumber, reason, note, CURRENT_USER);
             setToastMessage(`Expedite request logged for ${order.salesOrderNumber}.`);
           }}
-          onReleaseHold={setReleaseHoldTarget}
           onAddNote={(order, note) => addNote(order.salesOrderNumber, note, CURRENT_USER)}
           onAskQuestion={(order, question) => {
             askQuestion(order.salesOrderNumber, question, CURRENT_USER);
