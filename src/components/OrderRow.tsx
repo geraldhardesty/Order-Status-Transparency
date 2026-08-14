@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import type { Order } from '../types/order';
 import { formatDate, scheduleVarianceDays } from '../utils/dates';
 import { CreditHoldBadge, SourceTag, StatusBadge } from './Badges';
@@ -27,18 +28,28 @@ export function OrderRow({ order, expanded, onToggleExpand, onExpedite, onAddNot
   const isTerminal = TERMINAL_STATUSES.has(order.status);
   const isAtRisk = !isTerminal && variance > 0;
 
-  useEffect(() => {
-    if (showActionMenu && actionButtonRef.current) {
+  function toggleActionMenu() {
+    if (!showActionMenu && actionButtonRef.current) {
       const rect = actionButtonRef.current.getBoundingClientRect();
+      const menuWidth = 190;
       setMenuPos({
-        top: rect.bottom + window.scrollY + 4,
-        left: rect.left + window.scrollX,
+        top: rect.bottom + 4,
+        left: Math.min(rect.left, window.innerWidth - menuWidth - 8),
       });
-
-      const handleClickOutside = () => setShowActionMenu(false);
-      document.addEventListener('click', handleClickOutside);
-      return () => document.removeEventListener('click', handleClickOutside);
     }
+    setShowActionMenu((prev) => !prev);
+  }
+
+  useEffect(() => {
+    if (!showActionMenu) return;
+    const handleClickOutside = () => setShowActionMenu(false);
+    const handleScroll = () => setShowActionMenu(false);
+    document.addEventListener('click', handleClickOutside);
+    window.addEventListener('scroll', handleScroll, true);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+      window.removeEventListener('scroll', handleScroll, true);
+    };
   }, [showActionMenu]);
 
   const rowClassNames = [
@@ -64,9 +75,9 @@ export function OrderRow({ order, expanded, onToggleExpand, onExpedite, onAddNot
             <ChevronIcon direction={expanded ? 'down' : 'right'} />
           </button>
         </td>
-        <td className="cell-mono">{order.salesOrderNumber}</td>
+        <td className="cell-mono col-sticky col-sticky-so">{order.salesOrderNumber}</td>
         <td className="cell-mono cell-muted">{order.linkageNumber || '—'}</td>
-        <td className="cell-wrap">{order.customerName}</td>
+        <td className="cell-wrap col-sticky col-sticky-customer">{order.customerName}</td>
         <td className="cell-mono cell-muted">{order.customerId || '—'}</td>
         <td>{order.rep || '—'}</td>
         <td className="cell-mono">{order.msCode || '—'}</td>
@@ -109,83 +120,45 @@ export function OrderRow({ order, expanded, onToggleExpand, onExpedite, onAddNot
                 ref={actionButtonRef}
                 type="button"
                 className="btn btn-sm btn-primary"
-                onClick={() => setShowActionMenu(!showActionMenu)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleActionMenu();
+                }}
                 title="Actions menu"
               >
                 Actions ▼
               </button>
-              {showActionMenu && (
-                <div
-                  style={{
-                    position: 'fixed',
-                    top: menuPos.top,
-                    left: menuPos.left,
-                    backgroundColor: 'white',
-                    border: '1px solid #ddd',
-                    borderRadius: 4,
-                    boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
-                    zIndex: 99999,
-                    minWidth: 180,
-                  }}
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setOpenModal('expedite');
-                      setShowActionMenu(false);
-                    }}
-                    disabled={order.expedited || isTerminal}
-                    style={{
-                      width: '100%',
-                      padding: '10px 14px',
-                      textAlign: 'left',
-                      border: 'none',
-                      backgroundColor: 'transparent',
-                      cursor: order.expedited || isTerminal ? 'not-allowed' : 'pointer',
-                      opacity: order.expedited || isTerminal ? 0.5 : 1,
-                      fontSize: '14px',
-                      transition: 'background-color 0.2s',
-                    }}
-                    onMouseEnter={(e) => {
-                      if (!order.expedited && !isTerminal) {
-                        (e.target as HTMLElement).style.backgroundColor = '#f5f5f5';
-                      }
-                    }}
-                    onMouseLeave={(e) => {
-                      (e.target as HTMLElement).style.backgroundColor = 'transparent';
-                    }}
+              {showActionMenu &&
+                createPortal(
+                  <div
+                    className="action-menu"
+                    style={{ top: menuPos.top, left: menuPos.left }}
+                    onClick={(e) => e.stopPropagation()}
                   >
-                    <BoltIcon /> Expedite
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setOpenModal('question');
-                      setShowActionMenu(false);
-                    }}
-                    style={{
-                      width: '100%',
-                      padding: '10px 14px',
-                      textAlign: 'left',
-                      border: 'none',
-                      backgroundColor: 'transparent',
-                      borderTop: '1px solid var(--border-color)',
-                      cursor: 'pointer',
-                      fontSize: '14px',
-                      transition: 'background-color 0.2s',
-                    }}
-                    onMouseEnter={(e) => {
-                      (e.target as HTMLElement).style.backgroundColor = '#f5f5f5';
-                    }}
-                    onMouseLeave={(e) => {
-                      (e.target as HTMLElement).style.backgroundColor = 'transparent';
-                    }}
-                  >
-                    ❓ Ask a Question
-                  </button>
-                </div>
-              )}
+                    <button
+                      type="button"
+                      className="action-menu__item"
+                      onClick={() => {
+                        setOpenModal('expedite');
+                        setShowActionMenu(false);
+                      }}
+                      disabled={order.expedited || isTerminal}
+                    >
+                      <BoltIcon /> Expedite
+                    </button>
+                    <button
+                      type="button"
+                      className="action-menu__item"
+                      onClick={() => {
+                        setOpenModal('question');
+                        setShowActionMenu(false);
+                      }}
+                    >
+                      Ask a Question
+                    </button>
+                  </div>,
+                  document.body,
+                )}
             </div>
           </div>
         </td>

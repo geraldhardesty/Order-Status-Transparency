@@ -8,13 +8,14 @@ interface Column {
   key: SortKey | null;
   label: string;
   align?: 'right';
+  sticky?: 'so' | 'customer';
 }
 
 const COLUMNS: Column[] = [
   { key: null, label: '' },
-  { key: 'salesOrderNumber', label: 'Sales Order #' },
+  { key: 'salesOrderNumber', label: 'Sales Order #', sticky: 'so' },
   { key: 'linkageNumber', label: 'Linkage #' },
-  { key: 'customerName', label: 'Customer' },
+  { key: 'customerName', label: 'Customer', sticky: 'customer' },
   { key: null, label: 'Customer ID' },
   { key: 'rep', label: 'Rep' },
   { key: null, label: 'MS Code' },
@@ -93,7 +94,11 @@ export function OrdersTable({ orders, onExpedite, onAddNote, onAskQuestion }: Pr
         <thead>
           <tr>
             {COLUMNS.map((col) => (
-              <th key={col.label || 'expand'} style={col.align === 'right' ? { textAlign: 'right' } : undefined}>
+              <th
+                key={col.label || 'expand'}
+                className={col.sticky ? `col-sticky col-sticky-${col.sticky}` : undefined}
+                style={col.align === 'right' ? { textAlign: 'right' } : undefined}
+              >
                 {col.key ? (
                   <button type="button" onClick={() => toggleSort(col.key!)}>
                     {col.label}

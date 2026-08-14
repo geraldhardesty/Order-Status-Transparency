@@ -431,6 +431,10 @@ a {
   color: var(--ink-900);
 }
 
+.orders-table tbody tr {
+  background-color: var(--surface);
+}
+
 .orders-table tbody tr:hover {
   background: var(--surface-alt);
 }
@@ -504,6 +508,72 @@ a {
   padding: 48px 24px;
   text-align: center;
   color: var(--ink-500);
+}
+
+/* ---------- Frozen (sticky) columns ---------- */
+
+.orders-table th.col-sticky,
+.orders-table td.col-sticky {
+  position: sticky;
+  z-index: 2;
+}
+
+.orders-table thead th.col-sticky {
+  z-index: 3;
+}
+
+.orders-table td.col-sticky {
+  background-color: inherit;
+}
+
+.col-sticky-so {
+  left: 0;
+}
+
+.col-sticky-customer {
+  left: 118px;
+  box-shadow: 4px 0 6px -4px rgba(19, 20, 23, 0.25);
+}
+
+.orders-table thead th.col-sticky-customer {
+  box-shadow: 4px 0 6px -4px rgba(19, 20, 23, 0.25);
+}
+
+/* ---------- Action dropdown menu ---------- */
+
+.action-menu {
+  position: fixed;
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 8px 24px rgba(19, 20, 23, 0.22);
+  z-index: 1000;
+  min-width: 180px;
+  overflow: hidden;
+  padding: 4px;
+}
+
+.action-menu__item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  text-align: left;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  font-size: 12.5px;
+  color: var(--ink-900);
+}
+
+.action-menu__item:hover:not(:disabled) {
+  background: var(--surface-alt);
+}
+
+.action-menu__item:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
 }
 
 /* ---------- Badges ---------- */
