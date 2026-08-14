@@ -18,6 +18,7 @@ export const mockOrders: Order[] = [
     creditHold: false,
     source: 'SAP',
     expedited: false,
+    cpqQuoteNumber: 'Q-2026-88231',
     actionHistory: [],
   },
   {
@@ -33,6 +34,7 @@ export const mockOrders: Order[] = [
     creditHold: true,
     source: 'SAP',
     expedited: false,
+    cpqQuoteNumber: 'Q-2026-88232',
     actionHistory: [],
   },
   {
@@ -50,6 +52,7 @@ export const mockOrders: Order[] = [
     expedited: true,
     shippingNumber: '1Z999AA10123456784',
     shippingCarrier: 'UPS',
+    cpqQuoteNumber: 'Q-2026-88240',
     actionHistory: [
       {
         id: 'a1',

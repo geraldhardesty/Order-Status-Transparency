@@ -109,6 +109,20 @@ export function useOrders() {
     });
   }, []);
 
+  const askQuestion = useCallback((salesOrderNumber: string, question: string, actor: string) => {
+    dispatch({
+      type: 'LOG_ACTION',
+      salesOrderNumber,
+      entry: {
+        id: nextActionId(),
+        type: 'Question Asked' as ActionType,
+        note: question,
+        actor,
+        timestampIso: new Date().toISOString(),
+      },
+    });
+  }, []);
+
   return useMemo(
     () => ({
       orders: state.orders,
@@ -117,7 +131,8 @@ export function useOrders() {
       expediteOrder,
       releaseCreditHold,
       addNote,
+      askQuestion,
     }),
-    [state.orders, state.lastImport, importExcel, expediteOrder, releaseCreditHold, addNote],
+    [state.orders, state.lastImport, importExcel, expediteOrder, releaseCreditHold, addNote, askQuestion],
   );
 }

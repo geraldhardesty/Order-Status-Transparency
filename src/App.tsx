@@ -34,7 +34,7 @@ function matchesFilters(order: Order, filters: OrderFilters): boolean {
 }
 
 function App() {
-  const { orders, lastImport, importExcel, expediteOrder, releaseCreditHold, addNote } = useOrders();
+  const { orders, lastImport, importExcel, expediteOrder, releaseCreditHold, addNote, askQuestion } = useOrders();
   const [filters, setFilters] = useState<OrderFilters>(DEFAULT_FILTERS);
   const [expediteTarget, setExpediteTarget] = useState<Order | null>(null);
   const [releaseHoldTarget, setReleaseHoldTarget] = useState<Order | null>(null);
@@ -94,9 +94,16 @@ function App() {
         <FilterToolbar filters={filters} onChange={setFilters} repOptions={repOptions} resultCount={filteredOrders.length} />
         <OrdersTable
           orders={filteredOrders}
-          onExpedite={setExpediteTarget}
+          onExpedite={(order, reason, note) => {
+            expediteOrder(order.salesOrderNumber, reason, note, CURRENT_USER);
+            setToastMessage(`Expedite request logged for ${order.salesOrderNumber}.`);
+          }}
           onReleaseHold={setReleaseHoldTarget}
           onAddNote={(order, note) => addNote(order.salesOrderNumber, note, CURRENT_USER)}
+          onAskQuestion={(order, question) => {
+            askQuestion(order.salesOrderNumber, question, CURRENT_USER);
+            setToastMessage(`Question logged for ${order.salesOrderNumber}.`);
+          }}
         />
       </main>
 

@@ -12,7 +12,8 @@ export type ActionType =
   | 'Expedite Requested'
   | 'Credit Hold Released'
   | 'Note Added'
-  | 'Date Confirmed';
+  | 'Date Confirmed'
+  | 'Question Asked';
 
 export interface ActionLogEntry {
   id: string;
@@ -38,6 +39,7 @@ export interface Order {
   expedited: boolean;
   shippingNumber?: string;
   shippingCarrier?: 'FedEx' | 'UPS';
+  cpqQuoteNumber?: string;
   actionHistory: ActionLogEntry[];
 }
 

@@ -2,6 +2,8 @@ import { useState } from 'react';
 import type { Order } from '../types/order';
 import { formatDate, scheduleVarianceDays } from '../utils/dates';
 import { CreditHoldBadge, SourceTag, StatusBadge } from './Badges';
+import { ExpediteModal } from './ExpediteModal';
+import { AskQuestionModal } from './AskQuestionModal';
 import { BoltIcon, ChevronIcon } from './icons';
 
 const TERMINAL_STATUSES = new Set(['Shipped', 'Cancelled']);
@@ -10,13 +12,16 @@ interface Props {
   order: Order;
   expanded: boolean;
   onToggleExpand: () => void;
-  onExpedite: () => void;
+  onExpedite: (reason: string, note: string) => void;
   onReleaseHold: () => void;
   onAddNote: (note: string) => void;
+  onAskQuestion: (question: string) => void;
 }
 
-export function OrderRow({ order, expanded, onToggleExpand, onExpedite, onReleaseHold, onAddNote }: Props) {
+export function OrderRow({ order, expanded, onToggleExpand, onExpedite, onReleaseHold, onAddNote, onAskQuestion }: Props) {
   const [noteDraft, setNoteDraft] = useState('');
+  const [openModal, setOpenModal] = useState<'expedite' | 'question' | null>(null);
+  const [showActionMenu, setShowActionMenu] = useState(false);
   const variance = scheduleVarianceDays(order.originalPromisedShipDate, order.plannedShippingDate);
   const isTerminal = TERMINAL_STATUSES.has(order.status);
   const isAtRisk = !isTerminal && variance > 0;
@@ -75,6 +80,7 @@ export function OrderRow({ order, expanded, onToggleExpand, onExpedite, onReleas
             '—'
           )}
         </td>
+        <td className="cell-mono">{order.cpqQuoteNumber || '—'}</td>
         <td>
           <CreditHoldBadge onHold={order.creditHold} />
         </td>
@@ -82,28 +88,102 @@ export function OrderRow({ order, expanded, onToggleExpand, onExpedite, onReleas
           <SourceTag source={order.source} />
         </td>
         <td>
-          <div className="cell-actions">
+          <div className="cell-actions" style={{ position: 'relative' }}>
             {order.creditHold && (
               <button type="button" className="btn btn-sm" onClick={onReleaseHold}>
                 Release
               </button>
             )}
-            <button
-              type="button"
-              className="btn btn-sm btn-primary"
-              disabled={order.expedited || isTerminal}
-              onClick={onExpedite}
-              title={order.expedited ? 'Expedite already requested' : undefined}
-            >
-              <BoltIcon />
-              {order.expedited ? 'Expedited' : 'Expedite'}
-            </button>
+            <div style={{ position: 'relative', display: 'inline-block' }}>
+              <button
+                type="button"
+                className="btn btn-sm btn-primary"
+                onClick={() => setShowActionMenu(!showActionMenu)}
+                title="Actions menu"
+              >
+                Actions ▼
+              </button>
+              {showActionMenu && (
+                <div
+                  style={{
+                    position: 'absolute',
+                    right: 0,
+                    top: '100%',
+                    marginTop: 4,
+                    backgroundColor: 'white',
+                    border: '1px solid var(--border-color)',
+                    borderRadius: 4,
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+                    zIndex: 1000,
+                    minWidth: 160,
+                  }}
+                >
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setOpenModal('expedite');
+                      setShowActionMenu(false);
+                    }}
+                    disabled={order.expedited || isTerminal}
+                    style={{
+                      width: '100%',
+                      padding: '8px 12px',
+                      textAlign: 'left',
+                      border: 'none',
+                      backgroundColor: 'transparent',
+                      cursor: order.expedited || isTerminal ? 'not-allowed' : 'pointer',
+                      opacity: order.expedited || isTerminal ? 0.5 : 1,
+                    }}
+                  >
+                    <BoltIcon /> Expedite
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setOpenModal('question');
+                      setShowActionMenu(false);
+                    }}
+                    style={{
+                      width: '100%',
+                      padding: '8px 12px',
+                      textAlign: 'left',
+                      border: 'none',
+                      backgroundColor: 'transparent',
+                      borderTop: '1px solid var(--border-color)',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    ❓ Ask a Question
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </td>
       </tr>
+      {openModal === 'expedite' && (
+        <ExpediteModal
+          order={order}
+          onConfirm={(reason, note) => {
+            onExpedite(reason, note);
+            setOpenModal(null);
+          }}
+          onCancel={() => setOpenModal(null)}
+        />
+      )}
+      {openModal === 'question' && (
+        <AskQuestionModal
+          order={order}
+          onConfirm={(question) => {
+            onAskQuestion(question);
+            setOpenModal(null);
+          }}
+          onCancel={() => setOpenModal(null)}
+        />
+      )}
       {expanded && (
         <tr className="detail-row">
-          <td colSpan={13}>
+          <td colSpan={15}>
             <div className="detail-panel">
               <div className="detail-panel__facts">
                 <h4 style={{ gridColumn: '1 / -1' }}>Order Detail</h4>
@@ -116,6 +196,7 @@ export function OrderRow({ order, expanded, onToggleExpand, onExpedite, onReleas
                 <Fact label="Original Promised Ship" value={formatDate(order.originalPromisedShipDate)} />
                 <Fact label="Planned Ship" value={formatDate(order.plannedShippingDate)} />
                 <Fact label="Schedule Variance" value={variance === 0 ? 'On plan' : `${variance > 0 ? '+' : ''}${variance} days`} />
+                <Fact label="CPQ Quote #" value={order.cpqQuoteNumber || '—'} />
                 <Fact label="Shipping Number" value={order.shippingNumber ? `${order.shippingNumber} (${order.shippingCarrier})` : '—'} />
                 <Fact label="Credit Hold" value={order.creditHold ? 'Yes' : 'No'} />
               </div>

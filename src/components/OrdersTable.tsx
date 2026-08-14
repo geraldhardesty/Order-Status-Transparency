@@ -22,6 +22,7 @@ const COLUMNS: Column[] = [
   { key: 'originalPromisedShipDate', label: 'Orig. Promised Ship' },
   { key: 'plannedShippingDate', label: 'Planned Ship' },
   { key: null, label: 'Shipping #' },
+  { key: null, label: 'CPQ Quote #' },
   { key: null, label: 'Credit Hold' },
   { key: null, label: 'Source' },
   { key: null, label: 'Actions', align: 'right' },
@@ -43,12 +44,13 @@ function compareOrders(a: Order, b: Order, sort: SortState): number {
 
 interface Props {
   orders: Order[];
-  onExpedite: (order: Order) => void;
+  onExpedite: (order: Order, reason: string, note: string) => void;
   onReleaseHold: (order: Order) => void;
   onAddNote: (order: Order, note: string) => void;
+  onAskQuestion: (order: Order, question: string) => void;
 }
 
-export function OrdersTable({ orders, onExpedite, onReleaseHold, onAddNote }: Props) {
+export function OrdersTable({ orders, onExpedite, onReleaseHold, onAddNote, onAskQuestion }: Props) {
   const [sort, setSort] = useState<SortState>({ key: 'plannedShippingDate', direction: 'asc' });
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
 
@@ -84,6 +86,7 @@ export function OrdersTable({ orders, onExpedite, onReleaseHold, onAddNote }: Pr
           <col style={{ width: 108 }} />
           <col style={{ width: 108 }} />
           <col style={{ width: 128 }} />
+          <col style={{ width: 115 }} />
           <col style={{ width: 98 }} />
           <col style={{ width: 68 }} />
           <col style={{ width: 158 }} />
@@ -118,9 +121,10 @@ export function OrdersTable({ orders, onExpedite, onReleaseHold, onAddNote }: Pr
               order={order}
               expanded={expandedIds.has(order.salesOrderNumber)}
               onToggleExpand={() => toggleExpand(order.salesOrderNumber)}
-              onExpedite={() => onExpedite(order)}
+              onExpedite={(reason, note) => onExpedite(order, reason, note)}
               onReleaseHold={() => onReleaseHold(order)}
               onAddNote={(note) => onAddNote(order, note)}
+              onAskQuestion={(question) => onAskQuestion(order, question)}
             />
           ))}
         </tbody>
