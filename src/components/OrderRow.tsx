@@ -106,17 +106,16 @@ export function OrderRow({ order, expanded, onToggleExpand, onExpedite, onReleas
               {showActionMenu && (
                 <div
                   style={{
-                    position: 'absolute',
-                    right: 0,
-                    top: '100%',
-                    marginTop: 4,
+                    position: 'fixed',
                     backgroundColor: 'white',
                     border: '1px solid var(--border-color)',
                     borderRadius: 4,
-                    boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
-                    zIndex: 1000,
-                    minWidth: 160,
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
+                    zIndex: 10000,
+                    minWidth: 180,
                   }}
+                  onClick={(e) => e.stopPropagation()}
+                  onMouseLeave={() => setShowActionMenu(false)}
                 >
                   <button
                     type="button"
@@ -127,12 +126,22 @@ export function OrderRow({ order, expanded, onToggleExpand, onExpedite, onReleas
                     disabled={order.expedited || isTerminal}
                     style={{
                       width: '100%',
-                      padding: '8px 12px',
+                      padding: '10px 14px',
                       textAlign: 'left',
                       border: 'none',
                       backgroundColor: 'transparent',
                       cursor: order.expedited || isTerminal ? 'not-allowed' : 'pointer',
                       opacity: order.expedited || isTerminal ? 0.5 : 1,
+                      fontSize: '14px',
+                      transition: 'background-color 0.2s',
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!order.expedited && !isTerminal) {
+                        (e.target as HTMLElement).style.backgroundColor = '#f5f5f5';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      (e.target as HTMLElement).style.backgroundColor = 'transparent';
                     }}
                   >
                     <BoltIcon /> Expedite
@@ -145,12 +154,20 @@ export function OrderRow({ order, expanded, onToggleExpand, onExpedite, onReleas
                     }}
                     style={{
                       width: '100%',
-                      padding: '8px 12px',
+                      padding: '10px 14px',
                       textAlign: 'left',
                       border: 'none',
                       backgroundColor: 'transparent',
                       borderTop: '1px solid var(--border-color)',
                       cursor: 'pointer',
+                      fontSize: '14px',
+                      transition: 'background-color 0.2s',
+                    }}
+                    onMouseEnter={(e) => {
+                      (e.target as HTMLElement).style.backgroundColor = '#f5f5f5';
+                    }}
+                    onMouseLeave={(e) => {
+                      (e.target as HTMLElement).style.backgroundColor = 'transparent';
                     }}
                   >
                     ❓ Ask a Question
